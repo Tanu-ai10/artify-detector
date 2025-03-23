@@ -1,6 +1,7 @@
 
 import { useState } from 'react';
 import { type DetectionModel } from '@/lib/constants';
+import { toast } from '@/components/ui/use-toast';
 
 interface DetectionResult {
   isAI: boolean;
@@ -14,6 +15,8 @@ export function useDetection() {
   const [selectedModel, setSelectedModel] = useState<DetectionModel | null>(null);
   const [isAnalyzing, setIsAnalyzing] = useState(false);
   const [result, setResult] = useState<DetectionResult | null>(null);
+  const [isModelLoaded, setIsModelLoaded] = useState(false);
+  const [modelLoadError, setModelLoadError] = useState<string | null>(null);
   
   const handleImageSelect = (file: File | null) => {
     if (!file) {
@@ -30,26 +33,100 @@ export function useDetection() {
     reader.readAsDataURL(file);
   };
   
-  const analyzeImage = () => {
+  const loadModelFromGitLab = async (modelId: string) => {
+    if (!selectedModel) return;
+    
+    setIsModelLoaded(false);
+    setModelLoadError(null);
+    
+    try {
+      // Replace with your actual GitLab repository URL and path to models
+      const gitlabRepoUrl = `https://gitlab.com/your-username/your-repo/-/raw/main/models/${modelId}`;
+      
+      console.log(`Loading model from: ${gitlabRepoUrl}`);
+      const response = await fetch(gitlabRepoUrl);
+      
+      if (!response.ok) {
+        throw new Error(`Failed to load model: ${response.statusText}`);
+      }
+      
+      // For model files, you might need to handle different file types
+      // For JSON models:
+      const modelData = await response.json();
+      console.log("Model loaded successfully", modelData);
+      
+      // For binary model files, you might use:
+      // const modelBuffer = await response.arrayBuffer();
+      
+      setIsModelLoaded(true);
+      toast({
+        title: "Model loaded successfully",
+        description: `${selectedModel.name} is ready to use`,
+      });
+      
+      return modelData;
+    } catch (error) {
+      console.error("Error loading model:", error);
+      const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
+      setModelLoadError(errorMessage);
+      
+      toast({
+        title: "Failed to load model",
+        description: errorMessage,
+        variant: "destructive",
+      });
+      
+      return null;
+    }
+  };
+  
+  const analyzeImage = async () => {
     if (!selectedImage || !selectedModel) return;
     
     setIsAnalyzing(true);
     
-    // Simulate analysis with timeout (in real app, this would be an API call)
-    setTimeout(() => {
-      // Generate random result for demo purposes
-      const randomConfidence = Math.floor(Math.random() * 30) + 70; // 70-99%
-      const isAI = Math.random() > 0.5; // Random true/false
+    try {
+      // Try to load the model if not loaded already
+      if (!isModelLoaded) {
+        const modelData = await loadModelFromGitLab(selectedModel.id);
+        if (!modelData) {
+          setIsAnalyzing(false);
+          return;
+        }
+      }
       
-      setResult({
-        isAI,
-        confidence: randomConfidence,
-        modelUsed: selectedModel.name,
-        processingTime: selectedModel.detectionTime,
+      // In a real implementation, you would:
+      // 1. Preprocess the image to the format expected by your model
+      // 2. Run the model with the preprocessed image
+      // 3. Get the prediction results
+      
+      // For now, we'll continue with the simulated results
+      console.log("Analyzing image with model:", selectedModel.name);
+      
+      // Simulate analysis with timeout (in real app, this would be model inference)
+      setTimeout(() => {
+        // Generate random result for demo purposes
+        const randomConfidence = Math.floor(Math.random() * 30) + 70; // 70-99%
+        const isAI = Math.random() > 0.5; // Random true/false
+        
+        setResult({
+          isAI,
+          confidence: randomConfidence,
+          modelUsed: selectedModel.name,
+          processingTime: selectedModel.detectionTime,
+        });
+        
+        setIsAnalyzing(false);
+      }, 2000); // Simulate 2 second processing time
+    } catch (error) {
+      console.error("Analysis error:", error);
+      toast({
+        title: "Analysis failed",
+        description: "There was an error analyzing your image",
+        variant: "destructive",
       });
-      
       setIsAnalyzing(false);
-    }, 2000); // Simulate 2 second processing time
+    }
   };
   
   return {
@@ -57,12 +134,16 @@ export function useDetection() {
     selectedModel,
     isAnalyzing,
     result,
+    isModelLoaded,
+    modelLoadError,
     handleImageSelect,
     setSelectedModel,
     analyzeImage,
+    loadModelFromGitLab,
     resetDetection: () => {
       setSelectedImage(null);
       setResult(null);
+      setIsModelLoaded(false);
     }
   };
 }
