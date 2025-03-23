@@ -16,6 +16,7 @@ export function useDetection() {
   const [result, setResult] = useState<DetectionResult | null>(null);
   const [isModelLoaded, setIsModelLoaded] = useState(false);
   const [modelLoadError, setModelLoadError] = useState<string | null>(null);
+  const [customRepoUrl, setCustomRepoUrl] = useState<string>('');
   
   const handleImageSelect = (file: File | null) => {
     if (!file) {
@@ -72,14 +73,18 @@ export function useDetection() {
     }
   };
 
-  const loadModelFromGitHub = async (modelId: string) => {
+  const loadModelFromGitHub = async (modelId: string, customUrl?: string) => {
     if (!selectedModel) return;
     
     setIsModelLoaded(false);
     setModelLoadError(null);
     
     try {
-      const githubRepoUrl = `https://raw.githubusercontent.com/your-username/your-repo/main/models/${modelId}`;
+      const repoUrl = customUrl || customRepoUrl || 'https://raw.githubusercontent.com/your-username/your-repo/main';
+      
+      const cleanRepoUrl = repoUrl.replace(/\/+$/, '');
+      
+      const githubRepoUrl = `${cleanRepoUrl}/${modelId}`;
       
       console.log(`Loading model from GitHub: ${githubRepoUrl}`);
       const response = await fetch(githubRepoUrl);
@@ -121,8 +126,9 @@ export function useDetection() {
     
     try {
       if (!isModelLoaded) {
-        const modelData = await loadModelFromGitHub(selectedModel.id) || 
-                          await loadModelFromGitLab(selectedModel.id);
+        const modelData = customRepoUrl 
+          ? await loadModelFromGitHub(selectedModel.id)
+          : (await loadModelFromGitHub(selectedModel.id) || await loadModelFromGitLab(selectedModel.id));
         
         if (!modelData) {
           setIsAnalyzing(false);
@@ -163,6 +169,8 @@ export function useDetection() {
     result,
     isModelLoaded,
     modelLoadError,
+    customRepoUrl,
+    setCustomRepoUrl,
     handleImageSelect,
     setSelectedModel,
     setIsModelLoaded,

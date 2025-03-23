@@ -4,6 +4,7 @@ import { UploadArea } from "@/components/ui-elements/UploadArea";
 import { useDetection } from "@/hooks/useDetection";
 import { DETECTION_MODELS } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { ArrowRight, ArrowLeft, Sparkles, Loader2, CloudCog, Github } from "lucide-react";
 import { motion } from "framer-motion";
 import { useToast } from "@/components/ui/use-toast";
@@ -24,6 +25,8 @@ const Upload = () => {
     isModelLoaded,
     setIsModelLoaded,
     modelLoadError,
+    customRepoUrl,
+    setCustomRepoUrl,
     handleImageSelect, 
     setSelectedModel, 
     analyzeImage,
@@ -42,7 +45,7 @@ const Upload = () => {
   
   useEffect(() => {
     const loadModel = async () => {
-      if (selectedModel && !isModelLoaded && !modelLoadError) {
+      if (selectedModel && !isModelLoaded && !modelLoadError && customRepoUrl) {
         setIsLoadingModel(true);
         if (loadFromGithub) {
           await loadModelFromGitHub(selectedModel.id);
@@ -54,7 +57,7 @@ const Upload = () => {
     };
     
     loadModel();
-  }, [selectedModel, isModelLoaded, modelLoadError, loadModelFromGitLab, loadModelFromGitHub, loadFromGithub]);
+  }, [selectedModel, isModelLoaded, modelLoadError, loadModelFromGitLab, loadModelFromGitHub, loadFromGithub, customRepoUrl]);
   
   useEffect(() => {
     if (result) {
@@ -68,6 +71,15 @@ const Upload = () => {
   }, [result, navigate, selectedImage]);
   
   const handleContinue = () => {
+    if (!customRepoUrl) {
+      toast({
+        title: "GitHub URL required",
+        description: "Please enter your GitHub repository URL to load your custom model.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     if (!isModelLoaded && !modelLoadError) {
       toast({
         title: "Model not loaded",
@@ -79,7 +91,7 @@ const Upload = () => {
     if (modelLoadError) {
       toast({
         title: "Model error",
-        description: "There was an error loading the model. Please try again or select a different model.",
+        description: "There was an error loading the model. Please check your GitHub URL and try again.",
         variant: "destructive",
       });
       return;
@@ -94,6 +106,29 @@ const Upload = () => {
       setIsModelLoaded(false);
       setIsLoadingModel(false);
     }
+  };
+
+  const handleRepoUrlChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setCustomRepoUrl(e.target.value);
+    if (selectedModel) {
+      setIsModelLoaded(false);
+      setIsLoadingModel(false);
+    }
+  };
+
+  const handleLoadModel = async () => {
+    if (!customRepoUrl.trim() || !selectedModel) {
+      toast({
+        title: "Required information missing",
+        description: "Please enter a GitHub URL and select a model.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    setIsLoadingModel(true);
+    await loadModelFromGitHub(selectedModel.id);
+    setIsLoadingModel(false);
   };
   
   const modelName = selectedModel?.name || "a detection model";
@@ -128,6 +163,50 @@ const Upload = () => {
           selectedImage={selectedImage}
           isAnalyzing={isAnalyzing}
         />
+      </motion.div>
+      
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.3, duration: 0.5 }}
+        className="mb-8 p-5 rounded-lg border border-border"
+      >
+        <h3 className="text-lg font-medium mb-3">Load Your Custom Model</h3>
+        <div className="space-y-4">
+          <div>
+            <label htmlFor="github-url" className="block text-sm font-medium mb-1">
+              GitHub Repository URL
+            </label>
+            <div className="flex gap-2">
+              <Input
+                id="github-url"
+                value={customRepoUrl}
+                onChange={handleRepoUrlChange}
+                placeholder="https://raw.githubusercontent.com/your-username/repo/main/models"
+                className="flex-1"
+              />
+              <Button 
+                onClick={handleLoadModel} 
+                disabled={!customRepoUrl.trim() || !selectedModel || isLoadingModel}
+              >
+                {isLoadingModel ? (
+                  <>
+                    <Loader2 className="w-4 h-4 animate-spin mr-1" />
+                    Loading...
+                  </>
+                ) : (
+                  <>
+                    <Github className="w-4 h-4 mr-1" />
+                    Load Model
+                  </>
+                )}
+              </Button>
+            </div>
+            <p className="text-xs text-muted-foreground mt-1">
+              Provide the raw GitHub URL to the directory containing your CNN, SVM, K-means or transfer learning models
+            </p>
+          </div>
+        </div>
       </motion.div>
       
       {selectedModel && (
