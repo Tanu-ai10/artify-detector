@@ -79,6 +79,50 @@ export function useDetection() {
       return null;
     }
   };
+
+  const loadModelFromGitHub = async (modelId: string) => {
+    if (!selectedModel) return;
+    
+    setIsModelLoaded(false);
+    setModelLoadError(null);
+    
+    try {
+      // GitHub raw content URL pattern
+      const githubRepoUrl = `https://raw.githubusercontent.com/your-username/your-repo/main/models/${modelId}`;
+      
+      console.log(`Loading model from GitHub: ${githubRepoUrl}`);
+      const response = await fetch(githubRepoUrl);
+      
+      if (!response.ok) {
+        throw new Error(`Failed to load model from GitHub: ${response.statusText}`);
+      }
+      
+      // For JSON models:
+      const modelData = await response.json();
+      console.log("Model loaded successfully from GitHub", modelData);
+      
+      setIsModelLoaded(true);
+      toast({
+        title: "Model loaded successfully",
+        description: `${selectedModel.name} is ready to use`,
+        variant: "default",
+      });
+      
+      return modelData;
+    } catch (error) {
+      console.error("Error loading model from GitHub:", error);
+      const errorMessage = error instanceof Error ? error.message : "Unknown error occurred";
+      setModelLoadError(errorMessage);
+      
+      toast({
+        title: "Failed to load model from GitHub",
+        description: errorMessage,
+        variant: "destructive",
+      });
+      
+      return null;
+    }
+  };
   
   const analyzeImage = async () => {
     if (!selectedImage || !selectedModel) return;
@@ -88,7 +132,10 @@ export function useDetection() {
     try {
       // Try to load the model if not loaded already
       if (!isModelLoaded) {
-        const modelData = await loadModelFromGitLab(selectedModel.id);
+        // Try GitHub first, then fall back to GitLab if needed
+        const modelData = await loadModelFromGitHub(selectedModel.id) || 
+                          await loadModelFromGitLab(selectedModel.id);
+        
         if (!modelData) {
           setIsAnalyzing(false);
           return;
@@ -140,6 +187,7 @@ export function useDetection() {
     setSelectedModel,
     analyzeImage,
     loadModelFromGitLab,
+    loadModelFromGitHub,
     resetDetection: () => {
       setSelectedImage(null);
       setResult(null);

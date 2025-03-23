@@ -5,7 +5,7 @@ import { UploadArea } from "@/components/ui-elements/UploadArea";
 import { useDetection } from "@/hooks/useDetection";
 import { DETECTION_MODELS } from "@/lib/constants";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, ArrowLeft, Sparkles, Loader2, CloudCog } from "lucide-react";
+import { ArrowRight, ArrowLeft, Sparkles, Loader2, CloudCog, Github } from "lucide-react";
 import { motion } from "framer-motion";
 import { useToast } from "@/components/ui/use-toast";
 
@@ -15,6 +15,7 @@ const Upload = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [isLoadingModel, setIsLoadingModel] = useState(false);
+  const [loadFromGithub, setLoadFromGithub] = useState(true);
   
   const { 
     selectedImage, 
@@ -26,7 +27,8 @@ const Upload = () => {
     handleImageSelect, 
     setSelectedModel, 
     analyzeImage,
-    loadModelFromGitLab
+    loadModelFromGitLab,
+    loadModelFromGitHub
   } = useDetection();
   
   useEffect(() => {
@@ -43,13 +45,17 @@ const Upload = () => {
     const loadModel = async () => {
       if (selectedModel && !isModelLoaded && !modelLoadError) {
         setIsLoadingModel(true);
-        await loadModelFromGitLab(selectedModel.id);
+        if (loadFromGithub) {
+          await loadModelFromGitHub(selectedModel.id);
+        } else {
+          await loadModelFromGitLab(selectedModel.id);
+        }
         setIsLoadingModel(false);
       }
     };
     
     loadModel();
-  }, [selectedModel, isModelLoaded, modelLoadError, loadModelFromGitLab]);
+  }, [selectedModel, isModelLoaded, modelLoadError, loadModelFromGitLab, loadModelFromGitHub, loadFromGithub]);
   
   useEffect(() => {
     if (result) {
@@ -81,6 +87,15 @@ const Upload = () => {
     }
     
     analyzeImage();
+  };
+
+  const toggleModelSource = () => {
+    setLoadFromGithub(!loadFromGithub);
+    // Reset model loading state
+    if (selectedModel) {
+      setIsModelLoaded(false);
+      setIsLoadingModel(false);
+    }
   };
   
   const modelName = selectedModel?.name || "a detection model";
@@ -122,7 +137,7 @@ const Upload = () => {
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ delay: 0.3, duration: 0.5 }}
-          className="flex items-center justify-center p-4 rounded-lg bg-secondary/50 mb-12"
+          className="flex flex-wrap items-center justify-center p-4 rounded-lg bg-secondary/50 mb-8"
         >
           <div className="flex items-center gap-2">
             <selectedModel.icon className="w-5 h-5 text-accent" />
@@ -164,6 +179,28 @@ const Upload = () => {
           </Link>
         </motion.div>
       )}
+
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 0.3, duration: 0.5 }}
+        className="flex items-center justify-center p-4 rounded-lg bg-secondary/50 mb-12"
+      >
+        <div className="flex items-center gap-2">
+          {loadFromGithub ? <Github className="w-5 h-5 text-accent" /> : <CloudCog className="w-5 h-5 text-accent" />}
+          <span className="font-medium">Loading from {loadFromGithub ? "GitHub" : "GitLab"}</span>
+        </div>
+        
+        <div className="mx-4 h-6 border-l border-border"></div>
+        <Button 
+          variant="outline" 
+          onClick={toggleModelSource} 
+          className="text-sm"
+          disabled={isLoadingModel}
+        >
+          Switch to {loadFromGithub ? "GitLab" : "GitHub"}
+        </Button>
+      </motion.div>
       
       <motion.div 
         className="flex flex-col sm:flex-row justify-between gap-4"
