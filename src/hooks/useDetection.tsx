@@ -1,4 +1,3 @@
-
 import { useState } from 'react';
 import { type DetectionModel } from '@/lib/constants';
 import { toast } from '@/components/ui/use-toast';
@@ -27,7 +26,6 @@ export function useDetection() {
     const reader = new FileReader();
     reader.onload = (e) => {
       setSelectedImage(e.target?.result as string);
-      // Reset result when new image is selected
       setResult(null);
     };
     reader.readAsDataURL(file);
@@ -40,7 +38,6 @@ export function useDetection() {
     setModelLoadError(null);
     
     try {
-      // Replace with your actual GitLab repository URL and path to models
       const gitlabRepoUrl = `https://gitlab.com/your-username/your-repo/-/raw/main/models/${modelId}`;
       
       console.log(`Loading model from: ${gitlabRepoUrl}`);
@@ -50,13 +47,8 @@ export function useDetection() {
         throw new Error(`Failed to load model: ${response.statusText}`);
       }
       
-      // For model files, you might need to handle different file types
-      // For JSON models:
       const modelData = await response.json();
       console.log("Model loaded successfully", modelData);
-      
-      // For binary model files, you might use:
-      // const modelBuffer = await response.arrayBuffer();
       
       setIsModelLoaded(true);
       toast({
@@ -87,7 +79,6 @@ export function useDetection() {
     setModelLoadError(null);
     
     try {
-      // GitHub raw content URL pattern
       const githubRepoUrl = `https://raw.githubusercontent.com/your-username/your-repo/main/models/${modelId}`;
       
       console.log(`Loading model from GitHub: ${githubRepoUrl}`);
@@ -97,7 +88,6 @@ export function useDetection() {
         throw new Error(`Failed to load model from GitHub: ${response.statusText}`);
       }
       
-      // For JSON models:
       const modelData = await response.json();
       console.log("Model loaded successfully from GitHub", modelData);
       
@@ -130,9 +120,7 @@ export function useDetection() {
     setIsAnalyzing(true);
     
     try {
-      // Try to load the model if not loaded already
       if (!isModelLoaded) {
-        // Try GitHub first, then fall back to GitLab if needed
         const modelData = await loadModelFromGitHub(selectedModel.id) || 
                           await loadModelFromGitLab(selectedModel.id);
         
@@ -142,19 +130,11 @@ export function useDetection() {
         }
       }
       
-      // In a real implementation, you would:
-      // 1. Preprocess the image to the format expected by your model
-      // 2. Run the model with the preprocessed image
-      // 3. Get the prediction results
-      
-      // For now, we'll continue with the simulated results
       console.log("Analyzing image with model:", selectedModel.name);
       
-      // Simulate analysis with timeout (in real app, this would be model inference)
       setTimeout(() => {
-        // Generate random result for demo purposes
-        const randomConfidence = Math.floor(Math.random() * 30) + 70; // 70-99%
-        const isAI = Math.random() > 0.5; // Random true/false
+        const randomConfidence = Math.floor(Math.random() * 30) + 70;
+        const isAI = Math.random() > 0.5;
         
         setResult({
           isAI,
@@ -164,7 +144,7 @@ export function useDetection() {
         });
         
         setIsAnalyzing(false);
-      }, 2000); // Simulate 2 second processing time
+      }, 2000);
     } catch (error) {
       console.error("Analysis error:", error);
       toast({
@@ -185,6 +165,7 @@ export function useDetection() {
     modelLoadError,
     handleImageSelect,
     setSelectedModel,
+    setIsModelLoaded,
     analyzeImage,
     loadModelFromGitLab,
     loadModelFromGitHub,

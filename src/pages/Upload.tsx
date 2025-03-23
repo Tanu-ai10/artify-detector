@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { Link, useNavigate, useSearchParams } from "react-router-dom";
 import { UploadArea } from "@/components/ui-elements/UploadArea";
@@ -23,6 +22,7 @@ const Upload = () => {
     isAnalyzing, 
     result,
     isModelLoaded,
+    setIsModelLoaded,
     modelLoadError,
     handleImageSelect, 
     setSelectedModel, 
@@ -41,7 +41,6 @@ const Upload = () => {
   }, [modelId, setSelectedModel]);
   
   useEffect(() => {
-    // Load model when selected
     const loadModel = async () => {
       if (selectedModel && !isModelLoaded && !modelLoadError) {
         setIsLoadingModel(true);
@@ -91,7 +90,6 @@ const Upload = () => {
 
   const toggleModelSource = () => {
     setLoadFromGithub(!loadFromGithub);
-    // Reset model loading state
     if (selectedModel) {
       setIsModelLoaded(false);
       setIsLoadingModel(false);
