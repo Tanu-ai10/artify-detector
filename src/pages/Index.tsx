@@ -1,10 +1,17 @@
-
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, BrainCircuit, Shield, Zap, Image } from "lucide-react";
+import { ArrowRight, BrainCircuit, Shield, Zap } from "lucide-react";
 
 const Index = () => {
+  // Google image links (Replace with better images if needed)
+  const imageLinks = [
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTVFGcXnHFJY_Oc3n3HZOf25wfhbWxMhm2-Ag&s",
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSJ0vUv8EjwhOxN3ionbg-FEKZF0UaMbMm7MQ&s",
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTQ42sgWYA-S6OA4fjYiV0SCsrW1-kkgwBc-Q&s",
+    "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRORBtkT3UL7B0lwO_2bxyWdstP9n4B6VA40w&s"
+  ];
+
   return (
     <div className="container">
       {/* Hero Section */}
@@ -24,25 +31,25 @@ const Index = () => {
             >
               <span className="text-sm font-medium">AI Detection Technology</span>
             </motion.div>
-            
+
             <motion.h1 
               className="mb-6 leading-tight"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3, duration: 0.6 }}
             >
-              Distinguish AI-Generated Art From Human Creations
+              AI or Human? Unveiling the Truth Behind Art
             </motion.h1>
-            
+
             <motion.p 
               className="text-xl text-muted-foreground mb-8 max-w-xl mx-auto"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4, duration: 0.6 }}
             >
-              Our advanced detection models can analyze and identify whether an artwork was created by AI or by human hands with high precision.
+              Our advanced detection models analyze artwork to identify whether it was created by AI or human hands.
             </motion.p>
-            
+
             <motion.div 
               className="flex flex-wrap gap-4 justify-center"
               initial={{ opacity: 0, y: 10 }}
@@ -63,27 +70,29 @@ const Index = () => {
             </motion.div>
           </motion.div>
         </div>
-        
-        {/* Image Showcase */}
+
+        {/* Image Showcase - Now Uses Google Images */}
         <motion.div 
           className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6, duration: 0.6 }}
         >
-          {[1, 2, 3, 4].map((i) => (
+          {imageLinks.map((src, i) => (
             <div 
               key={i} 
-              className="h-60 rounded-xl glass-card flex items-center justify-center overflow-hidden"
+              className="h-60 rounded-xl glass-card overflow-hidden"
             >
-              <div className="w-full h-full bg-gradient-to-br from-secondary to-background flex items-center justify-center">
-                <Image className="w-12 h-12 text-foreground/10 animate-pulse-slow" />
-              </div>
+              <img 
+                src={src} 
+                alt={`Artwork ${i + 1}`} 
+                className="w-full h-full object-cover"
+              />
             </div>
           ))}
         </motion.div>
       </section>
-      
+
       {/* Features Section */}
       <section className="py-16 md:py-24">
         <div className="text-center mb-16">
@@ -103,10 +112,10 @@ const Index = () => {
             viewport={{ once: true }}
             transition={{ delay: 0.2, duration: 0.5 }}
           >
-            Our suite of advanced AI models analyze various aspects of artwork to determine its origin.
+            Our AI models analyze various aspects of artwork to determine its origin.
           </motion.p>
         </div>
-        
+
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           {[
             {
@@ -117,7 +126,7 @@ const Index = () => {
             {
               icon: Shield,
               title: "High Accuracy Rate",
-              description: "Our most advanced model achieves up to 94% accuracy in distinguishing AI from human-created art."
+              description: "Our most advanced model achieves up to 93% accuracy in distinguishing AI from human-created art."
             },
             {
               icon: Zap,
@@ -142,7 +151,7 @@ const Index = () => {
           ))}
         </div>
       </section>
-      
+
       {/* CTA Section */}
       <section className="py-16 md:py-24">
         <motion.div 
@@ -154,7 +163,7 @@ const Index = () => {
         >
           <h2 className="text-3xl md:text-4xl font-medium mb-4">Ready to Detect AI Art?</h2>
           <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
-            Upload your image and let our advanced models analyze whether it was created by AI or a human artist.
+            Upload your image and let our AI models analyze whether it was created by AI or a human artist.
           </p>
           <div className="flex flex-wrap gap-4 justify-center">
             <Button asChild size="lg">

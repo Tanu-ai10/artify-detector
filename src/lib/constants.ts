@@ -16,7 +16,7 @@ export const DETECTION_MODELS: DetectionModel[] = [
     name: "Convolutional Neural Network",
     description: "Deep learning model specialized in image processing with high accuracy for artistic style detection.",
     icon: BrainCircuit,
-    accuracy: 94,
+    accuracy: 93,
     detectionTime: "1-2 seconds",
   },
   {
@@ -24,7 +24,7 @@ export const DETECTION_MODELS: DetectionModel[] = [
     name: "Transfer Learning",
     description: "Pre-trained model that's been fine-tuned to detect specific patterns in AI-generated art.",
     icon: GitMerge,
-    accuracy: 92,
+    accuracy: 91,
     detectionTime: "0.5-1 seconds",
   },
   {

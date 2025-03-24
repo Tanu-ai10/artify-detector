@@ -1,4 +1,3 @@
-
 import { Link } from "react-router-dom";
 import { Zap, Github, Twitter } from "lucide-react";
 
@@ -9,11 +8,11 @@ export function Footer() {
         <div className="flex flex-col md:flex-row items-center justify-between gap-6">
           <div className="flex flex-col items-center md:items-start">
             <Link to="/" className="flex items-center gap-2 text-xl font-semibold mb-2">
-              <Zap className="h-5 w-5 text-accent" />
-              <span>ArtifyDetector</span>
+              <img src="/image.png" alt="Artalyze Logo" className="h-6 w-auto" />
+              <span>Artalyze</span>
             </Link>
             <p className="text-sm text-muted-foreground text-center md:text-left">
-              Advanced AI technology to detect AI-generated artwork
+              Cutting-edge AI technology for analyzing and detecting AI-generated artwork.
             </p>
           </div>
           
@@ -70,7 +69,7 @@ export function Footer() {
         
         <div className="mt-8 pt-4 border-t border-border/50 text-center">
           <p className="text-xs text-muted-foreground">
-            © {new Date().getFullYear()} ArtifyDetector. All rights reserved.
+            © {new Date().getFullYear()} Artalyze. Empowering the future of digital art analysis.
           </p>
         </div>
       </div>

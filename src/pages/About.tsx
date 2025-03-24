@@ -17,7 +17,7 @@ const About = () => {
           transition={{ duration: 0.5 }}
           className="text-center mb-12"
         >
-          <h1 className="mb-4">About ArtifyDetector</h1>
+          <h1 className="mb-4">About Artalyze</h1>
           <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
             Understanding the technology behind AI art detection
           </p>

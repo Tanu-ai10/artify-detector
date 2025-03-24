@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { ThemeToggle } from "@/components/ui-elements/ThemeToggle";
@@ -44,8 +43,9 @@ export function Header() {
           to="/" 
           className="flex items-center gap-2 text-xl font-semibold"
         >
-          <Zap className="h-6 w-6 text-accent" />
-          <span className="hidden sm:inline">ArtifyDetector</span>
+          {/* Replace Zap icon with an actual logo if needed */}
+          <img src="/image.png" alt="Artalyze Logo" className="h-8 w-auto" />
+          <span className="hidden sm:inline">Artalyze</span>
         </Link>
         
         {/* Desktop Navigation */}
