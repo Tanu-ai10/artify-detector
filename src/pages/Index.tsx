@@ -2,7 +2,7 @@
 import { Link } from "react-router-dom";
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
-import { ArrowRight, BrainCircuit, Shield, Zap, Image, Sparkles, FlaskConical, Layers } from "lucide-react";
+import { ArrowRight, BrainCircuit, Shield, Zap, Image } from "lucide-react";
 
 const Index = () => {
   return (
@@ -17,25 +17,21 @@ const Index = () => {
             className="max-w-3xl"
           >
             <motion.div 
-              className="inline-block px-4 py-1.5 rounded-full bg-accent/10 text-accent mb-8"
+              className="inline-block px-3 py-1 rounded-full bg-accent/10 text-accent mb-6"
               initial={{ opacity: 0, scale: 0.8 }}
               animate={{ opacity: 1, scale: 1 }}
               transition={{ delay: 0.2, duration: 0.4 }}
             >
-              <span className="text-sm font-medium flex items-center gap-1.5">
-                <Sparkles className="h-3.5 w-3.5" />
-                State-of-the-Art AI Detection
-              </span>
+              <span className="text-sm font-medium">AI Detection Technology</span>
             </motion.div>
             
             <motion.h1 
-              className="mb-6 leading-tight bg-gradient-to-br from-foreground to-foreground/70 bg-clip-text"
+              className="mb-6 leading-tight"
               initial={{ opacity: 0 }}
               animate={{ opacity: 1 }}
               transition={{ delay: 0.3, duration: 0.6 }}
             >
-              <span className="text-gradient font-semibold">Distinguish</span> AI-Generated Art 
-              <br />From Human Creations
+              Distinguish AI-Generated Art From Human Creations
             </motion.h1>
             
             <motion.p 
@@ -44,8 +40,7 @@ const Index = () => {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4, duration: 0.6 }}
             >
-              Our advanced detection models analyze visual patterns that human eyes miss,
-              identifying AI-generated artwork with exceptional accuracy.
+              Our advanced detection models can analyze and identify whether an artwork was created by AI or by human hands with high precision.
             </motion.p>
             
             <motion.div 
@@ -54,13 +49,13 @@ const Index = () => {
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5, duration: 0.4 }}
             >
-              <Button asChild size="lg" className="gap-2 px-8 rounded-full shadow-lg shadow-accent/20 hover:shadow-accent/30">
+              <Button asChild size="lg" className="gap-2">
                 <Link to="/upload">
-                  Analyze Image
+                  Get Started
                   <ArrowRight size={16} />
                 </Link>
               </Button>
-              <Button asChild variant="outline" size="lg" className="rounded-full">
+              <Button asChild variant="outline" size="lg">
                 <Link to="/about">
                   Learn More
                 </Link>
@@ -71,22 +66,20 @@ const Index = () => {
         
         {/* Image Showcase */}
         <motion.div 
-          className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6"
+          className="mt-16 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4"
           initial={{ opacity: 0, y: 40 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ delay: 0.6, duration: 0.6 }}
         >
           {[1, 2, 3, 4].map((i) => (
-            <motion.div 
+            <div 
               key={i} 
-              className="group h-60 md:h-72 rounded-2xl glass-card flex items-center justify-center overflow-hidden cursor-pointer"
-              whileHover={{ y: -5 }}
-              transition={{ type: "spring", stiffness: 300 }}
+              className="h-60 rounded-xl glass-card flex items-center justify-center overflow-hidden"
             >
-              <div className="w-full h-full bg-gradient-to-br from-secondary/80 to-background/80 flex items-center justify-center group-hover:scale-105 transition-all duration-300">
-                <Image className="w-12 h-12 text-accent/30 group-hover:text-accent/50 transition-all duration-300" />
+              <div className="w-full h-full bg-gradient-to-br from-secondary to-background flex items-center justify-center">
+                <Image className="w-12 h-12 text-foreground/10 animate-pulse-slow" />
               </div>
-            </motion.div>
+            </div>
           ))}
         </motion.div>
       </section>
@@ -95,7 +88,7 @@ const Index = () => {
       <section className="py-16 md:py-24">
         <div className="text-center mb-16">
           <motion.h2 
-            className="mb-4 inline-block text-gradient"
+            className="mb-4"
             initial={{ opacity: 0 }}
             whileInView={{ opacity: 1 }}
             viewport={{ once: true }}
@@ -118,18 +111,8 @@ const Index = () => {
           {[
             {
               icon: BrainCircuit,
-              title: "Neural Network Analysis",
-              description: "Our CNN models inspect pixel patterns and brushstrokes that reveal the subtle differences between AI and human art."
-            },
-            {
-              icon: Layers,
-              title: "Transfer Learning",
-              description: "Pre-trained on millions of images, our models leverage knowledge from diverse datasets for superior accuracy."
-            },
-            {
-              icon: FlaskConical,
-              title: "Multiple Detection Methods",
-              description: "Choose from CNN, Transfer Learning, SVM, or K-Means clustering for different analytical approaches."
+              title: "Multiple Detection Models",
+              description: "Choose from CNN, Transfer Learning, SVM, or K-Means clustering models for different analysis approaches."
             },
             {
               icon: Shield,
@@ -140,21 +123,15 @@ const Index = () => {
               icon: Zap,
               title: "Instant Analysis",
               description: "Receive detection results in seconds, with detailed confidence metrics and visual explanations."
-            },
-            {
-              icon: Sparkles,
-              title: "Continuous Learning",
-              description: "Our models constantly improve by learning from new AI-generated artwork and techniques."
             }
           ].map((feature, i) => (
             <motion.div
               key={i}
-              className="rounded-xl p-8 glass-card hover:shadow-lg"
+              className="rounded-xl p-6 glass-card"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: i * 0.1, duration: 0.5 }}
-              whileHover={{ y: -5 }}
             >
               <div className="w-12 h-12 rounded-lg bg-accent/10 flex items-center justify-center mb-4">
                 <feature.icon className="w-6 h-6 text-accent" />
@@ -169,30 +146,27 @@ const Index = () => {
       {/* CTA Section */}
       <section className="py-16 md:py-24">
         <motion.div 
-          className="rounded-3xl p-10 md:p-16 glass-elevated text-center"
+          className="rounded-2xl p-8 md:p-12 bg-gradient-to-br from-accent/20 to-background border border-accent/10 text-center"
           initial={{ opacity: 0, scale: 0.95 }}
           whileInView={{ opacity: 1, scale: 1 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
         >
-          <div className="absolute inset-0 rounded-3xl bg-gradient-to-br from-accent/20 via-transparent to-secondary/20 opacity-70"></div>
-          <div className="relative z-10">
-            <h2 className="text-4xl md:text-5xl font-semibold mb-6 text-gradient">Ready to Detect AI Art?</h2>
-            <p className="text-lg md:text-xl text-muted-foreground mb-10 max-w-2xl mx-auto">
-              Upload your image and let our advanced models analyze whether it was created by AI or a human artist.
-            </p>
-            <div className="flex flex-wrap gap-6 justify-center">
-              <Button asChild size="lg" className="gap-2 px-8 py-6 rounded-full text-lg shadow-lg shadow-accent/20 hover:shadow-accent/30">
-                <Link to="/models">
-                  Choose a Model
-                </Link>
-              </Button>
-              <Button asChild variant="outline" size="lg" className="px-8 py-6 rounded-full text-lg border-2">
-                <Link to="/upload">
-                  Upload Now
-                </Link>
-              </Button>
-            </div>
+          <h2 className="text-3xl md:text-4xl font-medium mb-4">Ready to Detect AI Art?</h2>
+          <p className="text-lg text-muted-foreground mb-8 max-w-2xl mx-auto">
+            Upload your image and let our advanced models analyze whether it was created by AI or a human artist.
+          </p>
+          <div className="flex flex-wrap gap-4 justify-center">
+            <Button asChild size="lg">
+              <Link to="/models">
+                Choose a Model
+              </Link>
+            </Button>
+            <Button asChild variant="outline" size="lg">
+              <Link to="/upload">
+                Upload Now
+              </Link>
+            </Button>
           </div>
         </motion.div>
       </section>
